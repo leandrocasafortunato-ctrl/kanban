@@ -210,6 +210,10 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   color: #fff; box-shadow: 0 2px 6px rgba(45,106,79,0.25);
   max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+.origem-chip.fortunato {
+  background: linear-gradient(135deg, #7c2d12 0%, #c2410c 100%);
+  box-shadow: 0 2px 6px rgba(194,65,12,0.25);
+}
 .origem-chip .origem-icon { font-size: 10px; flex-shrink: 0; }
 
 .segmento-chip {
@@ -681,7 +685,7 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 <div class="topbar">
   <div class="brand">
     <div class="brand-name">Possibilidades</div>
-    <div class="brand-tag">Kanban · Florio</div>
+    <div class="brand-tag">Kanban · Florio & Fortunato</div>
   </div>
 
   <div class="topbar-divider"></div>
@@ -692,6 +696,7 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
     <div class="stat-chip">Novos <b id="novo-count">0</b></div>
     <div class="stat-chip">Rep. <b id="rep-count">0</b></div>
     <div class="stat-chip">Florio <b id="florio-count">0</b></div>
+    <div class="stat-chip">Fortunato <b id="fortunato-count">0</b></div>
   </div>
 
   <button class="btn-modulo" id="btn-reps" onclick="irParaReps()">
@@ -1012,11 +1017,13 @@ function renderBoard(docs) {
   if (!board) return;
   board.innerHTML = '';
 
-  const florioCount = docs.filter(d => (d.origem||'') === 'Florio Alimentos').length;
-  document.getElementById('total-count').textContent  = docs.length;
-  document.getElementById('novo-count').textContent   = docs.filter(d => (d.status||'Novo Lead') === 'Novo Lead').length;
-  document.getElementById('rep-count').textContent    = docs.filter(d => d.status === 'representante').length;
-  document.getElementById('florio-count').textContent = florioCount;
+  const florioCount    = docs.filter(d => (d.origem||'') === 'Florio Alimentos').length;
+  const fortunatoCount = docs.filter(d => (d.origem||'') === 'Casa Fortunato').length;
+  document.getElementById('total-count').textContent      = docs.length;
+  document.getElementById('novo-count').textContent       = docs.filter(d => (d.status||'Novo Lead') === 'Novo Lead').length;
+  document.getElementById('rep-count').textContent        = docs.filter(d => d.status === 'representante').length;
+  document.getElementById('florio-count').textContent     = florioCount;
+  document.getElementById('fortunato-count').textContent  = fortunatoCount;
 
   COLS.forEach((col, ci) => {
     const cards = docs.filter(d => (d.status||'Novo Lead') === col.id);
@@ -1062,6 +1069,7 @@ function renderBoard(docs) {
       const segLabel   = c.segmento || null;
       const origemLabel = c.origem || null;
       const isFlorio   = origemLabel === 'Florio Alimentos';
+      const isFortunat = origemLabel === 'Casa Fortunato';
 
       let repChipHTML = '';
       if (c.representanteNome) {
@@ -1091,7 +1099,8 @@ function renderBoard(docs) {
         <div class="card-stripe"></div>
         <div class="card-inner">
           <div class="card-name" title="${c.nome||'—'}">${c.nome||'—'}</div>
-          ${isFlorio ? `<div class="origem-chip" title="Origem: ${origemLabel}"><span class="origem-icon">🌾</span>${origemLabel}</div>` : ''}
+          ${isFlorio   ? `<div class="origem-chip" title="Origem: ${origemLabel}"><span class="origem-icon">🌾</span>${origemLabel}</div>` : ''}
+          ${isFortunat ? `<div class="origem-chip fortunato" title="Origem: ${origemLabel}"><span class="origem-icon">🏡</span>${origemLabel}</div>` : ''}
           ${segLabel ? `<div class="segmento-chip" title="${segLabel}"><span class="seg-icon">${getSegmentoIcon(segLabel)}</span>${segLabel}</div>` : ''}
           ${repChipHTML}
           ${obsHTML}
