@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Possibilidades Kanban · Florio Alimentos</title>
+<title>Prospecções</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
@@ -80,6 +80,12 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 .brand { display: flex; align-items: baseline; gap: 6px; flex-shrink: 0; }
 .brand-name { font-family: 'Inter', sans-serif; font-size: 20px; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; }
 .brand-tag  { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.version-badge {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+  padding: 2px 8px; border-radius: 99px;
+  background: var(--rep-bg); border: 1.5px solid var(--rep-border);
+  color: var(--rep); white-space: nowrap; align-self: center;
+}
 
 .topbar-divider { width: 1px; height: 28px; background: var(--border); flex-shrink: 0; }
 
@@ -377,6 +383,19 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 }
 .btn-back:hover { border-color: var(--ink2); background: var(--surface2); }
 
+/* Botão Voltar ao Painel na topbar (visível só na view reps) */
+#btn-voltar-painel {
+  display: none;
+  align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 8px;
+  border: 1.5px solid var(--border); background: var(--surface2);
+  color: var(--ink2); font-size: 12px; font-weight: 600;
+  font-family: 'Inter', sans-serif; cursor: pointer; transition: all 0.15s;
+  white-space: nowrap; flex-shrink: 0;
+}
+#btn-voltar-painel:hover { border-color: var(--novo); color: var(--novo); background: var(--novo-bg); }
+#btn-voltar-painel.visible { display: flex; }
+
 .rep-form-card {
   background: var(--surface); border: 1.5px solid var(--border);
   border-radius: var(--radius); padding: 20px; margin-bottom: 28px;
@@ -582,7 +601,27 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   margin-top: 8px;
   padding-top: 8px;
   border-top: 1px solid var(--border);
+  flex-wrap: wrap;
 }
+
+.rep-card-confirmar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 5px;
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1.5px solid #bfdbfe;
+  font-size: 10px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex: 1;
+  justify-content: center;
+}
+.rep-card-confirmar:hover { background: #2563eb; color: #fff; border-color: #2563eb; }
 
 .rep-card-wa {
   display: flex;
@@ -620,7 +659,23 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   border: 1.5px dashed var(--border2);
 }
 
-/* Loading */
+.btn-edit-rep {
+  display: flex; align-items: center; gap: 5px;
+  padding: 6px 12px; border-radius: 6px;
+  border: 1.5px solid var(--rep-border); background: var(--rep-bg); color: var(--rep);
+  font-size: 12px; font-weight: 600; font-family: 'Inter', sans-serif;
+  cursor: pointer; transition: all 0.15s; white-space: nowrap;
+}
+.btn-edit-rep:hover { background: var(--rep); color: #fff; border-color: var(--rep); }
+
+.btn-del-rep-inline {
+  display: flex; align-items: center; gap: 5px;
+  padding: 6px 12px; border-radius: 6px;
+  border: 1.5px solid var(--can-border); background: var(--can-bg); color: var(--can);
+  font-size: 12px; font-weight: 600; font-family: 'Inter', sans-serif;
+  cursor: pointer; transition: all 0.15s; white-space: nowrap;
+}
+.btn-del-rep-inline:hover { background: var(--can); color: #fff; border-color: var(--can); }
 .loading {
   position: fixed; inset: 0; background: var(--bg);
   display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -684,9 +739,13 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 <!-- Topbar -->
 <div class="topbar">
   <div class="brand">
-    <div class="brand-name">Possibilidades</div>
-    <div class="brand-tag">Kanban · Florio & Fortunato</div>
+    <div class="brand-name">Prospecções</div>
+    <div class="version-badge">Versão 1.2</div>
   </div>
+
+  <button id="btn-voltar-painel" onclick="voltarKanban()">
+    ← Voltar ao Painel
+  </button>
 
   <div class="topbar-divider"></div>
 
@@ -720,9 +779,6 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 <!-- VIEW: Representantes -->
 <div class="view" id="view-reps">
   <div class="rep-page-header">
-    <button class="btn-back" onclick="voltarKanban()">
-      ← Voltar ao Kanban
-    </button>
     <div class="rep-page-title">Representantes</div>
   </div>
 
@@ -858,7 +914,7 @@ window.deletarRep = async function(id) {
 // Colunas
 const COLS = [
   { id: "Novo Lead",              label: "Novo Lead",                color: "#2563eb" },
-  { id: "negociando",             label: "Negociando",               color: "#d97706" },
+  { id: "negociando",             label: "Prospecções",              color: "#d97706" },
   { id: "representante",          label: "Enviado p/ Representante", color: "#7c3aed" },
   { id: "cancelado",              label: "Cancelado",                color: "#dc2626" },
 ];
@@ -1156,12 +1212,13 @@ function renderRepsList() {
           <div class="rep-avatar-lg" style="background:${rc.color}">${r.nome.charAt(0).toUpperCase()}</div>
           <div class="rep-info-page">
             <div class="rep-nome-page">${r.nome}</div>
-            <div class="rep-fone-page">${r.telefone || '—'}</div>
+            <div class="rep-fone-page">${formatFone(r.telefone)}</div>
           </div>
           ${wa ? `<a class="btn-wa" href="https://wa.me/${wa}" target="_blank" rel="noopener">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
             WhatsApp
           </a>` : ''}
+          <button class="btn-edit-rep" onclick="editarRep('${r.id}')">✏️ Editar</button>
           <button class="btn-del-rep" onclick="deletarRep('${r.id}')">✕ Remover</button>
         `;
         container.appendChild(div);
@@ -1204,13 +1261,15 @@ function renderRepsKanban() {
         <div class="rep-group-avatar" style="background:${rc.color}">${rep.nome.charAt(0).toUpperCase()}</div>
         <div class="rep-group-info">
           <div class="rep-group-name">${rep.nome}</div>
-          <div class="rep-group-phone">${rep.telefone || '—'}</div>
+          <div class="rep-group-phone">${formatFone(rep.telefone)}</div>
         </div>
         <div class="rep-group-stats">${clientesDoRep.length} cliente(s)</div>
         ${numWA(rep.telefone) ? `<a class="rep-group-wa" href="https://wa.me/${numWA(rep.telefone)}" target="_blank">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           WhatsApp
         </a>` : ''}
+        <button class="btn-edit-rep" onclick="editarRep('${rep.id}')">✏️ Editar</button>
+        <button class="btn-del-rep-inline" onclick="deletarRep('${rep.id}')">🗑️ Excluir</button>
       </div>
       <div class="rep-group-board">
         <div class="rep-col">
@@ -1250,6 +1309,9 @@ function renderRepsKanban() {
               <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
               WhatsApp
             </a>` : ''}
+            <button class="rep-card-confirmar" onclick="confirmarChamada('${rep.telefone}','${(cliente.nome||'').replace(/'/g,"\\'")}','${rep.nome.replace(/'/g,"\\'")}')">
+              📞 Confirmar
+            </button>
             <button class="rep-card-status" onclick="if(confirm('Marcar como atendido? Isso removerá da lista do representante.')) mover('${cliente.id}', 'negociando')" style="background:${rc.bg};color:${rc.color}">
               ✅ Atender
             </button>
@@ -1290,7 +1352,7 @@ window.abrirModalEnc = function(clienteId, clienteNome) {
         <div class="rep-avatar" style="background:${rc.color}">${r.nome.charAt(0).toUpperCase()}</div>
         <div class="rep-info">
           <div class="rep-nome-m">${r.nome}</div>
-          <div class="rep-fone-m">${r.telefone || '—'}</div>
+          <div class="rep-fone-m">${formatFone(r.telefone)}</div>
         </div>
         ${waEnvioUrl ? `<a class="btn-wa-rep" href="${waEnvioUrl}" target="_blank" rel="noopener"
             onclick="event.stopPropagation();encaminharRep('${clienteId}','${r.id}','${r.nome.replace(/'/g,"\\'")}')">
@@ -1340,6 +1402,7 @@ window.irParaReps = function() {
   document.getElementById('view-reps').classList.add('active');
   document.getElementById('btn-reps').classList.add('active');
   document.getElementById('search-wrap').style.display = 'none';
+  document.getElementById('btn-voltar-painel').classList.add('visible');
   renderRepsList();
   renderRepsKanban();
 };
@@ -1349,6 +1412,7 @@ window.voltarKanban = function() {
   document.getElementById('view-kanban').classList.add('active');
   document.getElementById('btn-reps').classList.remove('active');
   document.getElementById('search-wrap').style.display = '';
+  document.getElementById('btn-voltar-painel').classList.remove('visible');
   renderBoard(_allDocs);
 };
 
@@ -1443,7 +1507,47 @@ window.mostrarToast = function(msg) {
   window._toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
 };
 
-// Formatação do fone de representante
+// Formatar telefone para exibição (11) 99999-9999
+function formatFone(tel) {
+  if (!tel) return '—';
+  const n = tel.replace(/\D/g,'');
+  if (n.length === 11) return `(${n.slice(0,2)}) ${n.slice(2,7)}-${n.slice(7)}`;
+  if (n.length === 10) return `(${n.slice(0,2)}) ${n.slice(2,6)}-${n.slice(6)}`;
+  return tel;
+}
+
+// Editar representante
+window.editarRep = async function(id) {
+  const reps = window._reps || [];
+  const rep = reps.find(r => r.id === id);
+  if (!rep) return;
+  const novoNome = prompt('Nome do representante:', rep.nome);
+  if (novoNome === null) return;
+  const novoFoneRaw = prompt('WhatsApp com DDD (apenas números):', rep.telefone);
+  if (novoFoneRaw === null) return;
+  const novoFone = novoFoneRaw.replace(/\D/g,'');
+  if (!novoNome.trim()) { mostrarToast('Nome não pode ser vazio'); return; }
+  if (novoFone.length < 10) { mostrarToast('Telefone inválido'); return; }
+  if (_demoAtivo) {
+    const idx = (window._reps||[]).findIndex(r => r.id === id);
+    if (idx >= 0) { window._reps[idx].nome = novoNome.trim(); window._reps[idx].telefone = novoFone; }
+    renderRepsList(); renderRepsKanban();
+    mostrarToast('Representante atualizado');
+    return;
+  }
+  try {
+    await db.collection(COLECAO_REPS).doc(id).update({ nome: novoNome.trim(), telefone: novoFone });
+    mostrarToast('Representante atualizado');
+  } catch(e) { mostrarToast('Erro: ' + e.message); }
+};
+
+// Confirmar chamada do cliente
+window.confirmarChamada = function(repTelefone, clienteNome, repNome) {
+  const wa = numWA(repTelefone);
+  if (!wa) { mostrarToast('Representante sem telefone cadastrado'); return; }
+  const msg = encodeURIComponent(`Já chamou o cliente ${clienteNome}?`);
+  window.open(`https://wa.me/${wa}?text=${msg}`, '_blank');
+};
 const repFoneInput = document.getElementById('rep-fone-input');
 if (repFoneInput) {
   repFoneInput.addEventListener('input', function() {
