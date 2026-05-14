@@ -988,7 +988,7 @@ function numWA(tel) {
 function urlWhatsApp(telefone, nome) {
   const n = numWA(telefone);
   if (!n) return null;
-  const texto = encodeURIComponent(`Olá ${nome ? nome.split(' ')[0] : ''}, tudo bem? Estou entrando em contato referente ao seu cadastro na Florio Alimentos.`);
+  const texto = encodeURIComponent(`Olá ${nome ? nome.split(' ')[0] : ''}, tudo bem? Estamos entrando em contato referente ao seu interesse em nossos produtos.`);
   return `https://wa.me/${n}?text=${texto}`;
 }
 
