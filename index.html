@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Prospecções</title>
+<title>Prospecções Versão 1.5</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
@@ -676,6 +676,33 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   cursor: pointer; transition: all 0.15s; white-space: nowrap;
 }
 .btn-del-rep-inline:hover { background: var(--can); color: #fff; border-color: var(--can); }
+.btn-send-creds {
+  display: flex; align-items: center; gap: 5px;
+  padding: 6px 12px; border-radius: 6px;
+  border: 1.5px solid #86efac; background: #f0fdf4; color: #15803d;
+  font-size: 12px; font-weight: 600; font-family: 'Inter', sans-serif;
+  cursor: pointer; transition: all 0.15s; white-space: nowrap;
+}
+.btn-send-creds:hover { background: #15803d; color: #fff; border-color: #15803d; }
+.rep-form-field--senha { min-width: 160px; }
+.senha-input-wrap { display: flex; align-items: center; }
+.senha-input-wrap input { border-radius: 8px 0 0 8px; border-right: none; flex: 1; }
+.btn-toggle-senha {
+  padding: 0 10px; border-radius: 0 8px 8px 0;
+  border: 1.5px solid var(--border); border-left: none;
+  background: var(--surface2); cursor: pointer;
+  font-size: 14px; line-height: 1; transition: background 0.15s;
+  height: 38px;
+}
+.btn-toggle-senha:hover { background: var(--bg2); }
+.rep-senha-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 10px; font-weight: 700; padding: 2px 8px;
+  border-radius: 99px; white-space: nowrap;
+}
+.rep-senha-badge.ok  { background: #dcfce7; color: #15803d; border: 1.5px solid #bbf7d0; }
+.rep-senha-badge.nok { background: #fef9c3; color: #92400e; border: 1.5px solid #fde68a; }
+
 .loading {
   position: fixed; inset: 0; background: var(--bg);
   display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -723,24 +750,239 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
   .rep-group-board { flex-direction: column; }
   .rep-col { min-width: 100%; }
 }
-@media (min-width: 701px) and (max-width: 1100px) {
-  .board { flex-wrap: wrap; overflow-x: hidden; }
-  .col { flex: 0 0 calc(50% - 6px); min-width: 0; }
+/* ── Login Screen ───────────────────────────────────── */
+#tela-login {
+  position: fixed; inset: 0; z-index: 500;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  overflow: hidden;
+}
+#tela-login::before {
+  content: ''; position: absolute; width: 600px; height: 600px;
+  background: radial-gradient(circle, #dbeafe 0%, transparent 68%);
+  top: -200px; right: -200px; pointer-events: none;
+}
+#tela-login::after {
+  content: ''; position: absolute; width: 450px; height: 450px;
+  background: radial-gradient(circle, #f3e8ff 0%, transparent 68%);
+  bottom: -150px; left: -150px; pointer-events: none;
+}
+.login-card {
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: 20px; padding: 48px 44px 40px; width: 100%; max-width: 400px;
+  box-shadow: 0 20px 60px var(--shadow-md); position: relative; z-index: 1;
+  animation: fadeUp .45s ease both;
+}
+@keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+.login-logo {
+  width: 48px; height: 48px; background: var(--novo); border-radius: 13px;
+  display: flex; align-items: center; justify-content: center; margin-bottom: 22px;
+}
+.login-logo svg { stroke: #fff; }
+.login-titulo { font-family: 'Inter', sans-serif; font-size: 24px; font-weight: 800; color: var(--ink); letter-spacing: -.03em; margin-bottom: 5px; }
+.login-sub { font-size: 13px; color: var(--muted); margin-bottom: 30px; line-height: 1.5; }
+.login-campo { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+.login-campo label { font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--ink2); }
+.login-campo input {
+  width: 100%; padding: 11px 13px; border: 1.5px solid var(--border); border-radius: 8px;
+  font-size: 14px; font-family: 'Inter', sans-serif; color: var(--ink); background: var(--surface2);
+  outline: none; transition: border-color .15s, box-shadow .15s;
+}
+.login-campo input:focus { border-color: var(--novo); box-shadow: 0 0 0 3px rgba(37,99,235,.1); background: var(--surface); }
+.login-campo input::placeholder { color: var(--muted); }
+.login-senha-row { display: flex; }
+.login-senha-row input { border-radius: 8px 0 0 8px; border-right: none; flex: 1; }
+.login-btn-olho {
+  padding: 0 11px; border: 1.5px solid var(--border); border-left: none;
+  border-radius: 0 8px 8px 0; background: var(--surface2); font-size: 14px;
+  cursor: pointer; transition: background .15s; color: var(--muted);
+}
+.login-btn-olho:hover { background: var(--bg2); }
+.btn-login {
+  width: 100%; padding: 12px; margin-top: 6px; background: var(--novo); color: #fff;
+  border: none; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 14px;
+  font-weight: 700; cursor: pointer; transition: all .18s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-login:hover:not(:disabled) { background: #1e40af; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(37,99,235,.28); }
+.btn-login:disabled { opacity: .6; cursor: not-allowed; }
+.login-erro {
+  background: var(--can-bg); border: 1.5px solid var(--can-border); color: var(--can);
+  font-size: 13px; font-weight: 500; padding: 10px 13px; border-radius: 8px;
+  margin-top: 12px; display: none; animation: shake .3s ease;
+}
+.login-erro.show { display: block; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+
+/* ── View Rep (portal representante dentro do kanban) ─ */
+#view-rep-portal {
+  max-width: 1100px; margin: 0 auto; padding: 28px 20px 60px;
+}
+.rep-portal-header {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;
+}
+.rep-portal-title {
+  font-family: 'Inter', sans-serif; font-size: 22px; font-weight: 800; color: var(--ink); letter-spacing: -.02em;
+}
+.rep-portal-sub { font-size: 13px; color: var(--muted); flex: 1; }
+.rep-portal-badge {
+  display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px;
+  border-radius: 99px; font-size: 12px; font-weight: 700;
+  background: var(--rep-bg); border: 1.5px solid var(--rep-border); color: var(--rep);
+}
+.rep-portal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+.rp-card {
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+  transition: box-shadow .2s, transform .2s, border-color .2s;
+  animation: cardIn .3s ease both;
+}
+.rp-card:hover { box-shadow: 0 8px 24px var(--shadow-md); transform: translateY(-2px); border-color: var(--border2); }
+.rp-card-stripe { height: 4px; width: 100%; }
+.rp-card-body { padding: 16px 18px 13px; }
+.rp-card-row1 { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+.rp-card-nome { font-family: 'Inter', sans-serif; font-size: 14.5px; font-weight: 700; color: var(--ink); letter-spacing: -.01em; line-height: 1.3; }
+.rp-card-data { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.rp-st-badge { display: inline-flex; align-items: center; font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 99px; white-space: nowrap; flex-shrink: 0; letter-spacing: .04em; text-transform: uppercase; }
+.rp-card-info { display: flex; flex-direction: column; gap: 4px; margin-bottom: 11px; }
+.rp-info-r { display: flex; align-items: flex-start; gap: 7px; font-size: 12.5px; color: var(--ink2); line-height: 1.4; }
+.rp-info-r .ic { flex-shrink: 0; font-size: 13px; }
+.rp-info-r strong { color: var(--ink); font-weight: 600; }
+.rp-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.rp-chip-item { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 6px; letter-spacing: .02em; }
+/* Obs do representante */
+.rp-obs-wrap { margin-bottom: 13px; }
+.rp-obs-lbl { font-size: 10px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.rp-obs-ta {
+  width: 100%; min-height: 64px; padding: 9px 11px; border: 1.5px solid var(--border);
+  border-radius: 8px; font-size: 12.5px; font-family: 'Inter', sans-serif; color: var(--ink);
+  background: var(--surface2); resize: vertical; outline: none; transition: border-color .15s; line-height: 1.5;
+}
+.rp-obs-ta:focus { border-color: var(--rep); background: var(--surface); }
+.rp-obs-ta::placeholder { color: var(--muted); }
+.rp-obs-row { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+.btn-salvar-obs { padding: 5px 12px; border-radius: 6px; border: 1.5px solid var(--rep-border); background: var(--rep-bg); color: var(--rep); font-size: 11px; font-weight: 700; font-family: 'Inter', sans-serif; cursor: pointer; transition: all .15s; }
+.btn-salvar-obs:hover { background: var(--rep); color: #fff; border-color: var(--rep); }
+.obs-saved-ok { font-size: 11px; color: #059669; font-weight: 500; display: none; }
+.obs-saved-ok.show { display: inline; }
+/* Resultado dropdown */
+.rp-acoes { display: flex; flex-wrap: wrap; gap: 7px; padding-top: 12px; border-top: 1.5px solid var(--border); }
+.rp-a-btn {
+  display: flex; align-items: center; gap: 5px; padding: 7px 11px;
+  border-radius: 8px; border: 1.5px solid var(--border); background: var(--surface2);
+  font-size: 11px; font-weight: 600; font-family: 'Inter', sans-serif;
+  cursor: pointer; transition: all .15s; white-space: nowrap; text-decoration: none; color: var(--ink2);
+}
+.rp-a-btn:hover { border-color: var(--ink2); background: var(--bg2); color: var(--ink); }
+.rp-a-btn.wa { border-color: #86efac; background: #f0fdf4; color: #15803d; }
+.rp-a-btn.wa:hover { background: #15803d; color: #fff; border-color: #15803d; }
+.rp-a-btn.ct { border-color: var(--novo-border); background: var(--novo-bg); color: var(--novo); }
+.rp-a-btn.ct.marcado { background: var(--novo); color: #fff; border-color: var(--novo); cursor: default; }
+.rp-res-wrap { position: relative; margin-left: auto; }
+.btn-rp-res { display: flex; align-items: center; gap: 5px; padding: 7px 11px; border-radius: 8px; border: 1.5px solid var(--rep-border); background: var(--rep-bg); font-size: 11px; font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; transition: all .15s; white-space: nowrap; color: var(--rep); }
+.btn-rp-res:hover { background: var(--rep); color: #fff; }
+.rp-dropdown { position: absolute; right: 0; bottom: calc(100% + 6px); background: var(--surface); border: 1.5px solid var(--border); border-radius: 8px; box-shadow: 0 8px 28px var(--shadow-md); min-width: 188px; z-index: 50; overflow: hidden; display: none; animation: fadeUp .15s ease; }
+.rp-dropdown.open { display: block; }
+.rp-d-item { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: 12.5px; font-weight: 500; cursor: pointer; transition: background .12s; color: var(--ink2); border-bottom: 1px solid var(--border); }
+.rp-d-item:last-child { border-bottom: none; }
+.rp-d-item:hover { background: var(--surface2); color: var(--ink); }
+.rp-empty { grid-column: 1/-1; text-align: center; padding: 52px 20px; color: var(--muted); }
+.rp-empty .ei { font-size: 42px; margin-bottom: 13px; }
+.rp-empty .et { font-family: 'Inter', sans-serif; font-size: 17px; font-weight: 700; color: var(--ink2); margin-bottom: 5px; }
+.rp-empty .es { font-size: 13px; }
+
+/* Filtros do portal rep */
+.rp-filtros { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+.rp-f-btn { display: flex; align-items: center; gap: 5px; padding: 6px 13px; border-radius: 99px; border: 1.5px solid var(--border); background: var(--surface); font-size: 12px; font-weight: 600; font-family: 'Inter', sans-serif; color: var(--ink2); cursor: pointer; transition: all .15s; white-space: nowrap; }
+.rp-f-btn:hover, .rp-f-btn.ativo { border-color: var(--rep); color: var(--rep); background: var(--rep-bg); }
+.rp-f-btn .n { background: var(--border2); color: var(--ink2); border-radius: 99px; padding: 1px 7px; font-size: 10px; font-weight: 700; }
+.rp-f-btn.ativo .n { background: var(--rep); color: #fff; }
+
+/* Topbar user chip */
+.user-chip {
+  display: flex; align-items: center; gap: 7px;
+  background: var(--novo-bg); border: 1.5px solid var(--novo-border);
+  border-radius: 99px; padding: 4px 12px 4px 6px; flex-shrink: 0;
+}
+.user-chip-av {
+  width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 11px; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.user-chip-nome { font-size: 12px; font-weight: 600; color: var(--novo); }
+.user-chip.rep { background: var(--rep-bg); border-color: var(--rep-border); }
+.user-chip.rep .user-chip-nome { color: var(--rep); }
+.btn-sair-top {
+  display: flex; align-items: center; gap: 6px; padding: 6px 13px; border-radius: 8px;
+  border: 1.5px solid var(--border); background: var(--surface); color: var(--ink2);
+  font-size: 12px; font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; transition: all .15s;
+}
+.btn-sair-top:hover { border-color: var(--can); color: var(--can); background: var(--can-bg); }
+
+/* Obs no card do painel principal (visível p/ Humberto) */
+.obs-rep-chip {
+  display: flex; align-items: flex-start; gap: 5px;
+  font-size: 11px; color: var(--ink2); line-height: 1.4;
+  background: var(--rep-bg); border: 1px solid var(--rep-border);
+  border-radius: 6px; padding: 5px 8px; margin-bottom: 6px;
+  font-style: italic;
+}
+.obs-rep-chip .obs-ico { font-size: 11px; flex-shrink: 0; margin-top: 1px; }
+.obs-rep-chip .obs-text { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+/* Resultado badge no card */
+.resultado-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 10px; font-weight: 700; padding: 2px 8px;
+  border-radius: 99px; margin-bottom: 6px; white-space: nowrap;
 }
 </style>
 </head>
 <body>
 
-<div class="loading" id="loading">
+<!-- ── Tela de Login ── -->
+<div id="tela-login">
+  <div class="login-card">
+    <div class="login-logo">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+    </div>
+    <div class="login-titulo">Portal Prospecções</div>
+    <div class="login-sub">Entre com seu usuário e senha para acessar o painel.</div>
+    <div class="login-campo">
+      <label>Usuário</label>
+      <input type="text" id="login-usuario" placeholder="Seu nome de usuário" autocomplete="username">
+    </div>
+    <div class="login-campo">
+      <label>Senha</label>
+      <div class="login-senha-row">
+        <input type="password" id="login-senha" placeholder="Sua senha" autocomplete="current-password">
+        <button type="button" class="login-btn-olho" id="login-olho" onclick="loginToggleOlho()">👁</button>
+      </div>
+    </div>
+    <button class="btn-login" id="btn-login" onclick="fazerLogin()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+        <polyline points="10 17 15 12 10 7"/>
+        <line x1="15" y1="12" x2="3" y2="12"/>
+      </svg>
+      Entrar
+    </button>
+    <div class="login-erro" id="login-erro"></div>
+  </div>
+</div>
+
+<div class="loading hidden" id="loading">
   <div class="spinner"></div>
   <div class="loading-label">Conectando ao Firebase…</div>
 </div>
 
 <!-- Topbar -->
-<div class="topbar">
+<div class="topbar" id="main-topbar" style="display:none">
   <div class="brand">
     <div class="brand-name">Prospecções</div>
-    <div class="version-badge">Versão 1.2</div>
+    <div class="version-badge">Versão 1.5</div>
   </div>
 
   <button id="btn-voltar-painel" onclick="voltarKanban()">
@@ -769,10 +1011,16 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
     </svg>
     <input type="text" id="search" placeholder="Buscar cliente…" oninput="filtrar(this.value)">
   </div>
+
+  <div id="user-chip-wrap" class="user-chip" style="margin-left:auto">
+    <div class="user-chip-av" id="user-av" style="background:var(--novo)">H</div>
+    <span class="user-chip-nome" id="user-nome-display">Humberto</span>
+  </div>
+  <button class="btn-sair-top" onclick="fazerLogout()">↩ Sair</button>
 </div>
 
 <!-- VIEW: Kanban -->
-<div class="view active" id="view-kanban">
+<div class="view" id="view-kanban">
   <div class="board" id="board"></div>
 </div>
 
@@ -793,11 +1041,23 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
         <label>WhatsApp (com DDD)</label>
         <input type="tel" id="rep-fone-input" placeholder="11 99999-9999" maxlength="15" inputmode="numeric">
       </div>
+      <div class="rep-form-field rep-form-field--senha">
+        <label>Senha de acesso</label>
+        <div class="senha-input-wrap">
+          <input type="password" id="rep-senha-input" placeholder="Criar senha" autocomplete="new-password">
+          <button type="button" class="btn-toggle-senha" onclick="toggleSenhaVisivel('rep-senha-input', this)" title="Mostrar/ocultar">👁</button>
+        </div>
+      </div>
       <button class="btn-add-rep" onclick="adicionarRep()">+ Adicionar</button>
     </div>
   </div>
 
   <div class="reps-kanban-container" id="reps-kanban-container"></div>
+</div>
+
+<!-- VIEW: Portal Representante (acesso restrito) -->
+<div class="view" id="view-rep-portal">
+  <div id="rep-portal-root"></div>
 </div>
 
 <!-- Demo FAB -->
@@ -823,6 +1083,368 @@ html, body { height: 100%; background: var(--bg); color: var(--ink); font-family
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
 <script>
+// ════════════════════════════════════════════════════════════
+// USUÁRIOS — edite aqui para adicionar/alterar logins
+// tipo: 'admin' = acesso total | 'rep' = portal representante
+// nome: deve ser EXATAMENTE igual ao cadastrado como representante
+// ════════════════════════════════════════════════════════════
+const USUARIOS = [
+  { usuario: "Humberto", senha: "Cs12345", tipo: "admin" },
+  { usuario: "Leandro",  senha: "12345",   tipo: "rep"   },
+  { usuario: "SAUL - 2", senha: "12345",   tipo: "rep"   },
+  // Adicione mais usuários abaixo:
+  // { usuario: "NomeRep", senha: "senha", tipo: "rep" },
+];
+
+// Estado de autenticação
+let _usuarioLogado = null;  // { usuario, tipo }
+
+// ── Helpers login ──────────────────────────────────────────
+window.loginToggleOlho = function() {
+  const i = document.getElementById('login-senha');
+  const b = document.getElementById('login-olho');
+  if (i.type === 'password') { i.type = 'text';     b.textContent = '🙈'; }
+  else                        { i.type = 'password'; b.textContent = '👁'; }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  const iu = document.getElementById('login-usuario');
+  const is = document.getElementById('login-senha');
+  if (iu) iu.addEventListener('keydown', e => { if (e.key === 'Enter') is && is.focus(); });
+  if (is) is.addEventListener('keydown', e => { if (e.key === 'Enter') fazerLogin(); });
+});
+
+window.fazerLogin = async function() {
+  const usuario = (document.getElementById('login-usuario').value || '').trim();
+  const senha   = (document.getElementById('login-senha').value   || '');
+  const erroEl  = document.getElementById('login-erro');
+  const btnEl   = document.getElementById('btn-login');
+  erroEl.classList.remove('show');
+
+  if (!usuario || !senha) {
+    erroEl.textContent = 'Preencha usuário e senha.';
+    erroEl.classList.add('show'); return;
+  }
+
+  // 1. Verifica admin (local, sem Firebase)
+  const admin = USUARIOS.find(u =>
+    u.tipo === 'admin' &&
+    u.usuario.trim().toLowerCase() === usuario.toLowerCase() &&
+    u.senha === senha
+  );
+  if (admin) { _aplicarLogin(admin); return; }
+
+  // 2. Tenta como representante — busca no Firebase
+  btnEl.disabled = true;
+  btnEl.textContent = 'Verificando…';
+  try {
+    // Inicializa Firebase só para consulta (não inicia listeners do kanban ainda)
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const dbTemp = firebase.firestore();
+    const snap = await dbTemp.collection(COLECAO_REPS).get();
+    let repEncontrado = null;
+    snap.forEach(doc => {
+      const d = doc.data();
+      if (d.nome && d.senha &&
+          d.nome.trim().toLowerCase() === usuario.toLowerCase() &&
+          d.senha === senha) {
+        repEncontrado = { id: doc.id, ...d };
+      }
+    });
+    if (!repEncontrado) {
+      erroEl.textContent = 'Usuário ou senha incorretos.';
+      erroEl.classList.add('show');
+      btnEl.disabled = false;
+      btnEl.innerHTML = SVG_ENTRAR + ' Entrar';
+      return;
+    }
+    const user = { usuario: repEncontrado.nome, tipo: 'rep' };
+    _usuarioLogado = user;
+    _aplicarLogin(user);
+  } catch(e) {
+    erroEl.textContent = 'Erro de conexão: ' + e.message;
+    erroEl.classList.add('show');
+    btnEl.disabled = false;
+    btnEl.innerHTML = SVG_ENTRAR + ' Entrar';
+  }
+};
+
+const SVG_ENTRAR = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>`;
+
+function _aplicarLogin(user) {
+  _usuarioLogado = user;
+  document.getElementById('tela-login').style.display = 'none';
+  document.getElementById('main-topbar').style.display = '';
+  const btnEl = document.getElementById('btn-login');
+  btnEl.disabled = false; btnEl.innerHTML = SVG_ENTRAR + ' Entrar';
+  const cor = user.tipo === 'admin' ? 'var(--novo)' : 'var(--rep)';
+  document.getElementById('user-av').style.background = cor;
+  document.getElementById('user-av').textContent      = user.usuario.charAt(0).toUpperCase();
+  document.getElementById('user-nome-display').textContent = user.usuario;
+  const wrap = document.getElementById('user-chip-wrap');
+  if (user.tipo === 'rep') wrap.classList.add('rep'); else wrap.classList.remove('rep');
+
+  if (user.tipo === 'admin') {
+    document.getElementById('btn-reps').style.display = '';
+    document.getElementById('demo-fab').style.display = '';
+    document.getElementById('view-kanban').classList.add('active');
+    if (!window._fbIniciado) { window._fbIniciado = true; iniciarFirebase(); }
+  } else {
+    document.getElementById('btn-reps').style.display  = 'none';
+    document.getElementById('demo-fab').style.display  = 'none';
+    document.getElementById('search-wrap').style.display = 'none';
+    if (!window._fbIniciado) { window._fbIniciado = true; iniciarFirebase(); }
+    setTimeout(() => abrirPortalRep(user.usuario), 350);
+  }
+}
+
+window.fazerLogout = function() {
+  // Para listener do rep se existir
+  if (_rpUnsub) { _rpUnsub(); _rpUnsub = null; }
+  _rpClientes = []; _rpFiltro = 'todos';
+  _usuarioLogado = null;
+  // Remove active de todas as views
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('btn-reps').classList.remove('active');
+  document.getElementById('search-wrap').style.display  = '';
+  document.getElementById('btn-voltar-painel').classList.remove('visible');
+  document.getElementById('btn-reps').style.display = '';
+  document.getElementById('demo-fab').style.display = '';
+  document.getElementById('main-topbar').style.display = 'none';
+  // Limpa campos e mostra login
+  document.getElementById('login-usuario').value = '';
+  document.getElementById('login-senha').value   = '';
+  document.getElementById('login-erro').classList.remove('show');
+  document.getElementById('tela-login').style.display = 'flex';
+};
+
+// ════════════════════════════════════════════════════════════
+// PORTAL REPRESENTANTE (dentro do kanban)
+// ════════════════════════════════════════════════════════════
+let _rpFiltro   = 'todos';
+let _rpUnsub    = null;
+let _rpClientes = [];
+
+function abrirPortalRep(nomeRep) {
+  // Esconde kanban, mostra portal rep
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-rep-portal').classList.add('active');
+
+  const root = document.getElementById('rep-portal-root');
+  root.innerHTML = `
+    <div id="view-rep-portal" style="max-width:1100px;margin:0 auto;padding:28px 20px 60px">
+      <div class="rep-portal-header">
+        <div>
+          <div class="rep-portal-title">Meus Clientes</div>
+          <div class="rep-portal-sub">Clientes encaminhados para você — <strong>${nomeRep}</strong></div>
+        </div>
+        <div class="rep-portal-badge">👤 ${nomeRep}</div>
+      </div>
+      <div class="rp-filtros" id="rp-filtros">
+        <button class="rp-f-btn ativo" onclick="rpSetFiltro('todos',this)">Todos <span class="n" id="rpn-todos">0</span></button>
+        <button class="rp-f-btn" onclick="rpSetFiltro('aguardando',this)">⏳ Aguardando <span class="n" id="rpn-aguard">0</span></button>
+        <button class="rp-f-btn" onclick="rpSetFiltro('contatado',this)">📞 Contatado <span class="n" id="rpn-cont">0</span></button>
+        <button class="rp-f-btn" onclick="rpSetFiltro('negociando',this)">🤝 Negociando <span class="n" id="rpn-neg">0</span></button>
+        <button class="rp-f-btn" onclick="rpSetFiltro('comprou',this)">✅ Comprou <span class="n" id="rpn-comp">0</span></button>
+        <button class="rp-f-btn" onclick="rpSetFiltro('desistiu',this)">❌ Desistiu <span class="n" id="rpn-des">0</span></button>
+      </div>
+      <div class="rep-portal-grid" id="rp-grid"></div>
+    </div>
+  `;
+
+  // Escuta Firebase em tempo real
+  if (_rpUnsub) { _rpUnsub(); _rpUnsub = null; }
+  _rpUnsub = db.collection(COLECAO)
+    .where('status', '==', 'representante')
+    .onSnapshot(snap => {
+      _rpClientes = [];
+      snap.forEach(d => {
+        const data = d.data();
+        if (data.representanteNome &&
+            data.representanteNome.trim().toLowerCase() === nomeRep.trim().toLowerCase()) {
+          _rpClientes.push({ id: d.id, ...data });
+        }
+      });
+      _rpClientes.sort((a, b) => (b.criadoEm?.seconds||0) - (a.criadoEm?.seconds||0));
+      rpAtualizarBadges();
+      rpRenderGrid();
+    }, err => { mostrarToast('Erro: ' + err.message); });
+}
+
+function rpStCfg(res) {
+  switch(res) {
+    case 'comprou':    return { lbl:'Comprou',    cor:'#059669', bg:'#ecfdf5', brd:'#a7f3d0' };
+    case 'negociando': return { lbl:'Negociando', cor:'#d97706', bg:'#fffbeb', brd:'#fde68a' };
+    case 'desistiu':   return { lbl:'Desistiu',   cor:'#dc2626', bg:'#fef2f2', brd:'#fecaca' };
+    case 'contatado':  return { lbl:'Contatado',  cor:'#2563eb', bg:'#eff6ff', brd:'#bfdbfe' };
+    default:           return { lbl:'Aguardando', cor:'#7c3aed', bg:'#f5f3ff', brd:'#ddd6fe' };
+  }
+}
+
+function rpCnt(res) {
+  if (res === 'aguardando') return _rpClientes.filter(c => !c.resultadoRep || c.resultadoRep === 'aguardando').length;
+  return _rpClientes.filter(c => c.resultadoRep === res).length;
+}
+
+function rpAtualizarBadges() {
+  const el = id => document.getElementById(id);
+  if (!el('rpn-todos')) return;
+  el('rpn-todos').textContent  = _rpClientes.length;
+  el('rpn-aguard').textContent = rpCnt('aguardando');
+  el('rpn-cont').textContent   = rpCnt('contatado');
+  el('rpn-neg').textContent    = rpCnt('negociando');
+  el('rpn-comp').textContent   = rpCnt('comprou');
+  el('rpn-des').textContent    = rpCnt('desistiu');
+}
+
+window.rpSetFiltro = function(f, btn) {
+  _rpFiltro = f;
+  document.querySelectorAll('.rp-f-btn').forEach(b => b.classList.remove('ativo'));
+  if (btn) btn.classList.add('ativo');
+  rpRenderGrid();
+};
+
+function rpListaFiltrada() {
+  let l = [..._rpClientes];
+  if (_rpFiltro !== 'todos') {
+    if (_rpFiltro === 'aguardando') l = l.filter(c => !c.resultadoRep || c.resultadoRep === 'aguardando');
+    else l = l.filter(c => c.resultadoRep === _rpFiltro);
+  }
+  return l;
+}
+
+function rpRenderGrid() {
+  const grid = document.getElementById('rp-grid');
+  if (!grid) return;
+  const lista = rpListaFiltrada();
+  grid.innerHTML = '';
+
+  if (!lista.length) {
+    grid.innerHTML = `<div class="rp-empty">
+      <div class="ei">📭</div>
+      <div class="et">Nenhum cliente aqui</div>
+      <div class="es">Quando o painel encaminhar clientes para você, eles aparecerão aqui.</div>
+    </div>`;
+    return;
+  }
+
+  lista.forEach((c, i) => {
+    const st  = rpStCfg(c.resultadoRep);
+    const wa  = numWA(c.telefone);
+    const waUrl = wa ? `https://wa.me/${wa}?text=${encodeURIComponent(`Olá ${(c.nome||'').split(' ')[0]}, tudo bem? Estou entrando em contato a respeito do seu interesse em nossos produtos.`)}` : null;
+    const jaContatado = !!c.contatadoRep;
+    const obs = c.observacaoRep || '';
+
+    let chips = '';
+    if (c.segmento) chips += `<span class="rp-chip-item" style="background:#f1f5f9;color:#475569;border:1.5px solid #e2e8f0">🏷️ ${c.segmento}</span>`;
+    if (c.origem)   chips += `<span class="rp-chip-item" style="background:#fef3c7;color:#92400e;border:1.5px solid #fde68a">🌾 ${c.origem}</span>`;
+
+    const card = document.createElement('div');
+    card.className = 'rp-card';
+    card.style.animationDelay = `${i*0.04}s`;
+    card.innerHTML = `
+      <div class="rp-card-stripe" style="background:${st.cor}"></div>
+      <div class="rp-card-body">
+        <div class="rp-card-row1">
+          <div>
+            <div class="rp-card-nome">${c.nome||'—'}</div>
+            <div class="rp-card-data">Encaminhado em ${formatarDataBR(c.criadoEm)}</div>
+          </div>
+          <span class="rp-st-badge" style="background:${st.bg};color:${st.cor};border:1.5px solid ${st.brd}">${st.lbl}</span>
+        </div>
+        <div class="rp-card-info">
+          <div class="rp-info-r"><span class="ic">📍</span><span>${c.cidade||'—'}${c.estado?', '+c.estado:''}</span></div>
+          <div class="rp-info-r"><span class="ic">📞</span><strong>${c.telefone ? c.telefone.replace(/\D/g,'').replace(/(\d{2})(\d{4,5})(\d{4})/, '($1) $2-$3') : '—'}</strong></div>
+          ${c.mensagem ? `<div class="rp-info-r"><span class="ic">💬</span><span style="color:var(--muted);font-style:italic">"${c.mensagem}"</span></div>` : ''}
+          ${c.tipoDoc && c.documento ? `<div class="rp-info-r"><span class="ic">📄</span><span>${c.tipoDoc}: ${c.documento}</span></div>` : ''}
+        </div>
+        ${chips ? `<div class="rp-chips">${chips}</div>` : ''}
+        <div class="rp-obs-wrap">
+          <div class="rp-obs-lbl">Anotações da negociação</div>
+          <textarea class="rp-obs-ta" id="rpobs-${c.id}" placeholder="Anote: proposta feita, próximos passos, resultado…">${obs}</textarea>
+          <div class="rp-obs-row">
+            <button class="btn-salvar-obs" onclick="rpSalvarObs('${c.id}')">💾 Salvar nota</button>
+            <span class="obs-saved-ok" id="rpok-${c.id}">✓ Salvo!</span>
+          </div>
+        </div>
+        <div class="rp-acoes">
+          ${waUrl ? `<a class="rp-a-btn wa" href="${waUrl}" target="_blank" rel="noopener" onclick="rpMarcarContatado('${c.id}')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            WhatsApp
+          </a>` : ''}
+          <button class="rp-a-btn ct ${jaContatado?'marcado':''}" id="rp-ct-${c.id}"
+            onclick="${jaContatado ? 'void(0)' : `rpMarcarContatado('${c.id}')`}"
+            ${jaContatado ? 'title="Contato já registrado"' : ''}>
+            ${jaContatado ? '✅ Contatado' : '📞 Registrar contato'}
+          </button>
+          <div class="rp-res-wrap">
+            <button class="btn-rp-res" onclick="rpToggleDrop('rpd-${c.id}')">🔖 Resultado ▾</button>
+            <div class="rp-dropdown" id="rpd-${c.id}">
+              <div class="rp-d-item" onclick="rpSetResultado('${c.id}','contatado')">📞 Contatado — aguardando</div>
+              <div class="rp-d-item" onclick="rpSetResultado('${c.id}','negociando')">🤝 Em negociação</div>
+              <div class="rp-d-item" onclick="rpSetResultado('${c.id}','comprou')">✅ Comprou / Fechou</div>
+              <div class="rp-d-item" onclick="rpSetResultado('${c.id}','desistiu')">❌ Desistiu / Sem interesse</div>
+              <div class="rp-d-item" onclick="rpSetResultado('${c.id}','aguardando')">⏳ Aguardando retorno</div>
+            </div>
+          </div>
+          <button class="rp-a-btn" style="border-color:var(--can-border);background:var(--can-bg);color:var(--can);margin-left:4px"
+            onclick="rpDeletarCard('${c.id}','${(c.nome||'').replace(/'/g,"\\'")}')">
+            🗑️ Remover
+          </button>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+window.rpToggleDrop = function(id) {
+  document.querySelectorAll('.rp-dropdown').forEach(d => { if (d.id !== id) d.classList.remove('open'); });
+  document.getElementById(id)?.classList.toggle('open');
+};
+document.addEventListener('click', e => {
+  if (!e.target.closest('.rp-res-wrap'))
+    document.querySelectorAll('.rp-dropdown').forEach(d => d.classList.remove('open'));
+});
+
+window.rpMarcarContatado = async function(id) {
+  const btn = document.getElementById(`rp-ct-${id}`);
+  if (btn && btn.classList.contains('marcado')) return;
+  try {
+    await db.collection(COLECAO).doc(id).update({
+      contatadoRep: true,
+      contatadoRepEm: firebase.firestore.FieldValue.serverTimestamp(),
+      resultadoRep: 'contatado'
+    });
+    mostrarToast('📞 Contato registrado!');
+  } catch(e) { mostrarToast('Erro: ' + e.message); }
+};
+
+window.rpSetResultado = async function(id, res) {
+  document.querySelectorAll('.rp-dropdown').forEach(d => d.classList.remove('open'));
+  const upd = { resultadoRep: res };
+  if (res !== 'aguardando') upd.contatadoRep = true;
+  try {
+    await db.collection(COLECAO).doc(id).update(upd);
+    const labels = { comprou:'Comprou ✅', negociando:'Em negociação 🤝', desistiu:'Desistiu ❌', contatado:'Contatado 📞', aguardando:'Aguardando ⏳' };
+    mostrarToast('Status: ' + (labels[res] || res));
+  } catch(e) { mostrarToast('Erro: ' + e.message); }
+};
+
+window.rpSalvarObs = async function(id) {
+  const ta = document.getElementById(`rpobs-${id}`);
+  const ok = document.getElementById(`rpok-${id}`);
+  if (!ta) return;
+  try {
+    await db.collection(COLECAO).doc(id).update({
+      observacaoRep: ta.value.trim(),
+      observacaoRepEm: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    ok.classList.add('show');
+    setTimeout(() => ok.classList.remove('show'), 2500);
+  } catch(e) { mostrarToast('Erro ao salvar: ' + e.message); }
+};
+
 // Firebase Config
 const firebaseConfig = {
   apiKey:            "AIzaSyC9GUjz57QeFJdboy6nGOAvXm_y7nqJTcY",
@@ -839,8 +1461,12 @@ const COLECAO      = "clientes";
 const COLECAO_REPS = "representantes";
 const COLECAO_CLIENTES_REPS = "clientesRepresentantes";
 
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
+
+// Inicia listeners Firebase — chamado após login admin
+function iniciarFirebase() {
+  document.getElementById('loading').classList.remove('hidden');
 
 // Escuta clientes em tempo real
 const q = db.collection(COLECAO).orderBy("criadoEm", "desc");
@@ -869,6 +1495,7 @@ db.collection(COLECAO_REPS).orderBy("criadoEm", "asc").onSnapshot((snapshot) => 
 });
 
 setTimeout(() => document.getElementById('loading').classList.add('hidden'), 4000);
+}
 
 // Funções Firebase clientes
 window._fbMoverStatus = async (id, novoStatus, extra) => {
@@ -889,16 +1516,21 @@ window._fbDeletar = async (id) => {
 
 // Funções Firebase representantes
 window.adicionarRep = async function() {
-  const nome = document.getElementById('rep-nome-input').value.trim();
-  const fone = document.getElementById('rep-fone-input').value.replace(/\D/g,'').trim();
-  if (!nome) { mostrarToast("Informe o nome do representante"); return; }
+  const nome  = document.getElementById('rep-nome-input').value.trim();
+  const fone  = document.getElementById('rep-fone-input').value.replace(/\D/g,'').trim();
+  const senha = document.getElementById('rep-senha-input').value.trim();
+  if (!nome)            { mostrarToast("Informe o nome do representante"); return; }
   if (fone.length < 10) { mostrarToast("Informe um WhatsApp válido com DDD"); return; }
+  if (!senha)           { mostrarToast("Informe uma senha de acesso para o representante"); return; }
+  if (senha.length < 4) { mostrarToast("A senha deve ter ao menos 4 caracteres"); return; }
   try {
     await db.collection(COLECAO_REPS).add({
-      nome, telefone: fone, criadoEm: firebase.firestore.FieldValue.serverTimestamp()
+      nome, telefone: fone, senha,
+      criadoEm: firebase.firestore.FieldValue.serverTimestamp()
     });
-    document.getElementById('rep-nome-input').value = '';
-    document.getElementById('rep-fone-input').value = '';
+    document.getElementById('rep-nome-input').value   = '';
+    document.getElementById('rep-fone-input').value   = '';
+    document.getElementById('rep-senha-input').value  = '';
     mostrarToast("Representante cadastrado");
   } catch(e) { mostrarToast("Erro: " + e.message); }
 };
@@ -988,7 +1620,7 @@ function numWA(tel) {
 function urlWhatsApp(telefone, nome) {
   const n = numWA(telefone);
   if (!n) return null;
-  const texto = encodeURIComponent(`Olá ${nome ? nome.split(' ')[0] : ''}, tudo bem? Estamos entrando em contato referente ao seu interesse em nossos produtos.`);
+  const texto = encodeURIComponent(`Olá ${nome ? nome.split(' ')[0] : ''}, tudo bem? Estou entrando em contato referente ao seu cadastro na Florio Alimentos.`);
   return `https://wa.me/${n}?text=${texto}`;
 }
 
@@ -1145,6 +1777,26 @@ function renderBoard(docs) {
         </div>`;
       }
 
+      // Observação e resultado do representante (visível para o admin)
+      let obsRepHTML = '';
+      if (c.observacaoRep && c.observacaoRep.trim()) {
+        obsRepHTML = `<div class="obs-rep-chip">
+          <span class="obs-ico">📝</span>
+          <span class="obs-text"><strong>Rep:</strong> ${c.observacaoRep}</span>
+        </div>`;
+      }
+      const RESULTADO_CFG = {
+        comprou:    { lbl:'Comprou ✅',    cor:'#059669', bg:'#ecfdf5', brd:'#a7f3d0' },
+        negociando: { lbl:'Negociando 🤝', cor:'#d97706', bg:'#fffbeb', brd:'#fde68a' },
+        desistiu:   { lbl:'Desistiu ❌',   cor:'#dc2626', bg:'#fef2f2', brd:'#fecaca' },
+        contatado:  { lbl:'Contatado 📞',  cor:'#2563eb', bg:'#eff6ff', brd:'#bfdbfe' },
+      };
+      let resultadoRepHTML = '';
+      if (c.resultadoRep && RESULTADO_CFG[c.resultadoRep]) {
+        const rc2 = RESULTADO_CFG[c.resultadoRep];
+        resultadoRepHTML = `<div class="resultado-chip" style="background:${rc2.bg};color:${rc2.cor};border:1.5px solid ${rc2.brd}">${rc2.lbl}</div>`;
+      }
+
       const btnEncHTML = col.id !== 'representante'
         ? `<button class="btn-encaminhar" onclick="event.stopPropagation();abrirModalEnc('${c.id}','${(c.nome||'').replace(/'/g,"\\'")}')">
             📤 Encaminhar
@@ -1160,6 +1812,8 @@ function renderBoard(docs) {
           ${segLabel ? `<div class="segmento-chip" title="${segLabel}"><span class="seg-icon">${getSegmentoIcon(segLabel)}</span>${segLabel}</div>` : ''}
           ${repChipHTML}
           ${obsHTML}
+          ${resultadoRepHTML}
+          ${obsRepHTML}
           <div class="card-fields">
             <div class="field-row"><span class="ico">📍</span><span>${c.cidade||'—'}, ${c.estado||'—'}</span></div>
             <div class="field-row"><span class="ico">📞</span><span>${foneFormatado}</span></div>
@@ -1262,6 +1916,7 @@ function renderRepsKanban() {
         <div class="rep-group-info">
           <div class="rep-group-name">${rep.nome}</div>
           <div class="rep-group-phone">${formatFone(rep.telefone)}</div>
+          <span class="rep-senha-badge ${rep.senha ? 'ok' : 'nok'}">${rep.senha ? '🔑 Senha configurada' : '⚠️ Sem senha'}</span>
         </div>
         <div class="rep-group-stats">${clientesDoRep.length} cliente(s)</div>
         ${numWA(rep.telefone) ? `<a class="rep-group-wa" href="https://wa.me/${numWA(rep.telefone)}" target="_blank">
@@ -1270,6 +1925,7 @@ function renderRepsKanban() {
         </a>` : ''}
         <button class="btn-edit-rep" onclick="editarRep('${rep.id}')">✏️ Editar</button>
         <button class="btn-del-rep-inline" onclick="deletarRep('${rep.id}')">🗑️ Excluir</button>
+        ${numWA(rep.telefone) && rep.senha ? `<button class="btn-send-creds" onclick="enviarCredenciais('${rep.id}')">📲 Enviar acesso</button>` : ''}
       </div>
       <div class="rep-group-board">
         <div class="rep-col">
@@ -1516,28 +2172,130 @@ function formatFone(tel) {
   return tel;
 }
 
-// Editar representante
-window.editarRep = async function(id) {
+// Helper: mostrar/ocultar senha
+window.toggleSenhaVisivel = function(inputId, btn) {
+  const inp = document.getElementById(inputId);
+  if (!inp) return;
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+  else                         { inp.type = 'password'; btn.textContent = '👁'; }
+};
+
+// Editar representante (nome, telefone e senha)
+window.editarRep = function(id) {
   const reps = window._reps || [];
-  const rep = reps.find(r => r.id === id);
+  const rep  = reps.find(r => r.id === id);
   if (!rep) return;
-  const novoNome = prompt('Nome do representante:', rep.nome);
-  if (novoNome === null) return;
-  const novoFoneRaw = prompt('WhatsApp com DDD (apenas números):', rep.telefone);
-  if (novoFoneRaw === null) return;
-  const novoFone = novoFoneRaw.replace(/\D/g,'');
-  if (!novoNome.trim()) { mostrarToast('Nome não pode ser vazio'); return; }
+
+  // Cria modal inline se não existir
+  let overlay = document.getElementById('modal-edit-rep-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'modal-edit-rep-overlay';
+    overlay.className = 'overlay';
+    overlay.innerHTML = `
+      <div class="modal" onclick="event.stopPropagation()" style="max-width:420px">
+        <button class="modal-close" onclick="fecharModal('modal-edit-rep-overlay')">✕</button>
+        <div class="modal-title">Editar Representante</div>
+        <div style="display:flex;flex-direction:column;gap:14px;margin-top:4px">
+          <div class="rep-form-field">
+            <label>Nome</label>
+            <input type="text" id="edit-rep-nome" placeholder="Nome do representante">
+          </div>
+          <div class="rep-form-field">
+            <label>WhatsApp (com DDD)</label>
+            <input type="tel" id="edit-rep-fone" placeholder="11 99999-9999" maxlength="15" inputmode="numeric">
+          </div>
+          <div class="rep-form-field">
+            <label>Senha de acesso <span style="font-size:10px;color:var(--muted);font-weight:400">(deixe em branco para não alterar)</span></label>
+            <div class="senha-input-wrap">
+              <input type="password" id="edit-rep-senha" placeholder="Nova senha (mín. 4 caracteres)" autocomplete="new-password">
+              <button type="button" class="btn-toggle-senha" onclick="toggleSenhaVisivel('edit-rep-senha', this)" title="Mostrar/ocultar">👁</button>
+            </div>
+          </div>
+          <button class="btn-add-rep" style="align-self:flex-end;margin-top:4px" onclick="salvarEdicaoRep()">💾 Salvar alterações</button>
+        </div>
+      </div>`;
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) fecharModal('modal-edit-rep-overlay'); });
+    document.body.appendChild(overlay);
+
+    // Máscara telefone no campo edição
+    document.getElementById('edit-rep-fone').addEventListener('input', function() {
+      let v = this.value.replace(/\D/g,'').slice(0,11);
+      if (v.length > 2) v = v.slice(0,2) + ' ' + v.slice(2);
+      if (v.length > 8) v = v.slice(0,9) + '-' + v.slice(9);
+      this.value = v;
+    });
+  }
+
+  // Preenche com dados atuais
+  document.getElementById('edit-rep-nome').value  = rep.nome;
+  document.getElementById('edit-rep-fone').value  = formatFone(rep.telefone).replace(/\D/g,'').replace(/(\d{2})(\d{4,5})(\d{4})/, '$1 $2-$3');
+  document.getElementById('edit-rep-senha').value = '';
+  overlay.setAttribute('data-rep-id', id);
+  abrirModal('modal-edit-rep-overlay');
+};
+
+window.salvarEdicaoRep = async function() {
+  const overlay   = document.getElementById('modal-edit-rep-overlay');
+  const id        = overlay.getAttribute('data-rep-id');
+  const novoNome  = document.getElementById('edit-rep-nome').value.trim();
+  const novoFone  = document.getElementById('edit-rep-fone').value.replace(/\D/g,'');
+  const novaSenha = document.getElementById('edit-rep-senha').value.trim();
+
+  if (!novoNome)          { mostrarToast('Nome não pode ser vazio'); return; }
   if (novoFone.length < 10) { mostrarToast('Telefone inválido'); return; }
+  if (novaSenha && novaSenha.length < 4) { mostrarToast('A senha deve ter ao menos 4 caracteres'); return; }
+
+  const upd = { nome: novoNome, telefone: novoFone };
+  if (novaSenha) upd.senha = novaSenha;
+
   if (_demoAtivo) {
     const idx = (window._reps||[]).findIndex(r => r.id === id);
-    if (idx >= 0) { window._reps[idx].nome = novoNome.trim(); window._reps[idx].telefone = novoFone; }
+    if (idx >= 0) { Object.assign(window._reps[idx], upd); }
     renderRepsList(); renderRepsKanban();
     mostrarToast('Representante atualizado');
+    fecharModal('modal-edit-rep-overlay');
     return;
   }
   try {
-    await db.collection(COLECAO_REPS).doc(id).update({ nome: novoNome.trim(), telefone: novoFone });
-    mostrarToast('Representante atualizado');
+    await db.collection(COLECAO_REPS).doc(id).update(upd);
+    mostrarToast(novaSenha ? 'Representante e senha atualizados' : 'Representante atualizado');
+    fecharModal('modal-edit-rep-overlay');
+  } catch(e) { mostrarToast('Erro: ' + e.message); }
+};
+
+// Enviar credenciais de acesso por WhatsApp
+window.enviarCredenciais = function(repId) {
+  const rep = (window._reps||[]).find(r => r.id === repId);
+  if (!rep) return;
+  const wa = numWA(rep.telefone);
+  if (!wa) { mostrarToast('Representante sem WhatsApp cadastrado'); return; }
+  const msg = encodeURIComponent(
+    `Olá ${rep.nome.split(' ')[0]}! Aqui estão seus dados de acesso ao Portal do Representante:\n\n` +
+    ` Usuário: ${rep.nome}\n` +
+    ` Senha: ${rep.senha}\n\n` +
+    `Acesse o portal para visualizar seus clientes encaminhados.`
+  );
+  window.open(`https://wa.me/${wa}?text=${msg}`, '_blank');
+};
+
+// Deletar card pelo representante (com notificação no painel)
+window.rpDeletarCard = async function(clienteId, clienteNome) {
+  if (!confirm(`Remover "${clienteNome}" da sua lista?\n\nIsso ficará registrado no painel do administrador.`)) return;
+  try {
+    await db.collection(COLECAO).doc(clienteId).update({
+      status: 'cancelado',
+      resultadoRep: 'desistiu',
+      removidoPeloRep: true,
+      removidoPeloRepEm: firebase.firestore.FieldValue.serverTimestamp(),
+      removidoPeloRepNome: _usuarioLogado?.usuario || '—',
+      observacaoRep: (await (async () => {
+        const doc = await db.collection(COLECAO).doc(clienteId).get();
+        const obs = doc.data()?.observacaoRep || '';
+        return obs ? obs + '\n[Removido pelo representante]' : '[Removido pelo representante]';
+      })())
+    });
+    mostrarToast('Card removido e notificado no painel');
   } catch(e) { mostrarToast('Erro: ' + e.message); }
 };
 
